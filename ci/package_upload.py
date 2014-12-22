@@ -119,7 +119,7 @@ class PackageUpload(object):
             sleep(5)
             driver = self.get_selenium()
 
-        driver.implicitly_wait(240) # seconds
+        driver.implicitly_wait(300) # seconds
 
         # Load the packages list page
         driver.get('%s/0A2' % self.instance_url)
