@@ -119,7 +119,7 @@ class PackageUpload(object):
             sleep(5)
             driver = self.get_selenium()
 
-        driver.implicitly_wait(300) # seconds
+        driver.implicitly_wait(180) # seconds
 
         # Load the packages list page
         driver.get('%s/0A2' % self.instance_url)
@@ -142,8 +142,14 @@ class PackageUpload(object):
         print 'Loaded Upload form'
         sys.stdout.flush()
 
-        # Populate and submit the upload form to create a beta managed package
-        name_input = driver.find_element_by_id('ExportPackagePage:UploadPackageForm:PackageDetailsPageBlock:PackageDetailsBlockSection:VersionInfoSectionItem:VersionText')
+        try:
+            # Populate and submit the upload form to create a beta managed package
+            name_input = driver.find_element_by_id('ExportPackagePage:UploadPackageForm:PackageDetailsPageBlock:PackageDetailsBlockSection:VersionInfoSectionItem:VersionText')
+        except:
+            print "Sleeping 90 more seconds to try again.  Last attempt to connect to find Package Version failed"
+            sleep(90)
+            name_input = driver.find_element_by_id('ExportPackagePage:UploadPackageForm:PackageDetailsPageBlock:PackageDetailsBlockSection:VersionInfoSectionItem:VersionText')
+
         name_input.clear()
         name_input.send_keys(build_name)
         driver.find_element_by_id('ExportPackagePage:UploadPackageForm:PackageDetailsPageBlock:PackageDetailsPageBlockButtons:bottom:upload').click()
