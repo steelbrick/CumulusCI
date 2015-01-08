@@ -146,8 +146,8 @@ class PackageUpload(object):
             # Populate and submit the upload form to create a beta managed package
             name_input = driver.find_element_by_id('ExportPackagePage:UploadPackageForm:PackageDetailsPageBlock:PackageDetailsBlockSection:VersionInfoSectionItem:VersionText')
         except:
-            print "Sleeping 90 more seconds to try again.  Last attempt to connect to find Package Version failed"
-            sleep(90)
+            print "Sleeping 120 more seconds to try again.  Last attempt to connect to find Package Version failed"
+            sleep(120)
             name_input = driver.find_element_by_id('ExportPackagePage:UploadPackageForm:PackageDetailsPageBlock:PackageDetailsBlockSection:VersionInfoSectionItem:VersionText')
 
         name_input.clear()
