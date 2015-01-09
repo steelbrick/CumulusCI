@@ -142,13 +142,21 @@ class PackageUpload(object):
         print 'Loaded Upload form'
         sys.stdout.flush()
 
-        try:
-            # Populate and submit the upload form to create a beta managed package
-            name_input = driver.find_element_by_id('ExportPackagePage:UploadPackageForm:PackageDetailsPageBlock:PackageDetailsBlockSection:VersionInfoSectionItem:VersionText')
-        except:
-            print "Sleeping 180 more seconds to try again.  Last attempt to connect to find Package Version failed"
-            sleep(180)
-            name_input = driver.find_element_by_id('ExportPackagePage:UploadPackageForm:PackageDetailsPageBlock:PackageDetailsBlockSection:VersionInfoSectionItem:VersionText')
+        retry_count = 0
+        last_status = None
+        while True:
+            try:
+                # Populate and submit the upload form to create a beta managed package
+                name_input = driver.find_element_by_id('ExportPackagePage:UploadPackageForm:PackageDetailsPageBlock:PackageDetailsBlockSection:VersionInfoSectionItem:VersionText')
+            except:
+                # These come up, possibly if you catch the page in the middle of updating the text via javascript
+                print "Waiting for Package Version..."
+                if retry_count > 30:
+                    print "Last attempt to connect to find Package Version failed"
+                    break
+                sleep(10)
+                retry_count += 1
+                continue
 
         name_input.clear()
         name_input.send_keys(build_name)
