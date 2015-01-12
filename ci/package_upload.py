@@ -119,7 +119,7 @@ class PackageUpload(object):
             sleep(5)
             driver = self.get_selenium()
 
-        driver.implicitly_wait(180) # seconds
+        driver.implicitly_wait(30) # seconds
 
         # Load the packages list page
         driver.get('%s/0A2' % self.instance_url)
@@ -148,7 +148,7 @@ class PackageUpload(object):
             try:
                 # Populate and submit the upload form to create a beta managed package
                 name_input = driver.find_element_by_id('ExportPackagePage:UploadPackageForm:PackageDetailsPageBlock:PackageDetailsBlockSection:VersionInfoSectionItem:VersionText')
-            except:
+            except selenium.common.exceptions.NoSuchElementException:
                 # These come up, possibly if you catch the page in the middle of updating the text via javascript
                 print "Waiting for Package Version..."
                 if retry_count > 30:
