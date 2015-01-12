@@ -147,6 +147,7 @@ class PackageUpload(object):
             name_input = driver.find_element_by_id('ExportPackagePage:UploadPackageForm:PackageDetailsPageBlock:PackageDetailsBlockSection:VersionInfoSectionItem:VersionText')
         except selenium.common.exceptions.NoSuchElementException:
             print "Couldn't find the element the first time, trying again..."
+            sys.stdout.flush()
             name_input = driver.find_element_by_id('ExportPackagePage:UploadPackageForm:PackageDetailsPageBlock:PackageDetailsBlockSection:VersionInfoSectionItem:VersionText')
         except:
             e = sys.exc_info()[0]
