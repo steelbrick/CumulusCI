@@ -119,7 +119,7 @@ class PackageUpload(object):
             sleep(5)
             driver = self.get_selenium()
 
-        driver.implicitly_wait(30) # seconds
+        driver.implicitly_wait(90) # seconds
 
         # Load the packages list page
         driver.get('%s/0A2' % self.instance_url)
@@ -144,6 +144,9 @@ class PackageUpload(object):
 
         try:
             # Populate and submit the upload form to create a beta managed package
+            name_input = driver.find_element_by_id('ExportPackagePage:UploadPackageForm:PackageDetailsPageBlock:PackageDetailsBlockSection:VersionInfoSectionItem:VersionText')
+        except selenium.common.exceptions.NoSuchElementException:
+            print "Couldn't find the element the first time, trying again..."
             name_input = driver.find_element_by_id('ExportPackagePage:UploadPackageForm:PackageDetailsPageBlock:PackageDetailsBlockSection:VersionInfoSectionItem:VersionText')
         except:
             e = sys.exc_info()[0]
