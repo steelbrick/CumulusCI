@@ -142,21 +142,13 @@ class PackageUpload(object):
         print 'Loaded Upload form'
         sys.stdout.flush()
 
-        retry_count = 0
-        last_status = None
-        while True:
-            try:
-                # Populate and submit the upload form to create a beta managed package
-                name_input = driver.find_element_by_id('ExportPackagePage:UploadPackageForm:PackageDetailsPageBlock:PackageDetailsBlockSection:VersionInfoSectionItem:VersionText')
-            except selenium.common.exceptions.NoSuchElementException:
-                # These come up, possibly if you catch the page in the middle of updating the text via javascript
-                print "Waiting for Package Version..."
-                if retry_count > 30:
-                    print "Last attempt to connect to find Package Version failed"
-                    break
-                sleep(10)
-                retry_count += 1
-                continue
+        try:
+            # Populate and submit the upload form to create a beta managed package
+            name_input = driver.find_element_by_id('ExportPackagePage:UploadPackageForm:PackageDetailsPageBlock:PackageDetailsBlockSection:VersionInfoSectionItem:VersionText')
+        except:
+            e = sys.exc_info()[0]
+            v = sys.exc_info()[1]
+            sys.exit("Error: %s : %s" % (e, v))
 
         name_input.clear()
         name_input.send_keys(build_name)
