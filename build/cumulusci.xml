@@ -310,6 +310,9 @@
             <case value="letterhead">
               <property name="typename" value="Letterhead" />
             </case>
+            <case value="weblinks">
+              <property name="typename" value="CustomPageWebLink" />
+            </case>
             <default/>
           </switch>
 
