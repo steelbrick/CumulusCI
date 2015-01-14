@@ -121,29 +121,47 @@ class PackageUpload(object):
 
         driver.implicitly_wait(90) # seconds
 
-        # Load the packages list page
-        driver.get('%s/0A2' % self.instance_url)
+        retry_count = 0
+        while True:
+            try:
+                # Load the packages list page
+                driver.get('%s/0A2' % self.instance_url)
 
-        # Update Status
-        print 'Loaded package listing page'
-        sys.stdout.flush()
+                # Update Status
+                print 'Loaded package listing page'
+                sys.stdout.flush()
 
-        # Click the link to the package
-        driver.find_element_by_xpath("//th[contains(@class,'dataCell')]/a[text()='%s']" % self.package).click()
+                # Click the link to the package
+                driver.find_element_by_xpath("//th[contains(@class,'dataCell')]/a[text()='%s']" % self.package).click()
 
-        # Update Status
-        print 'Loaded package page'
-        sys.stdout.flush()
+                # Update Status
+                print 'Loaded package page'
+                sys.stdout.flush()
 
-        # Click the Upload button to open the upload form
-        driver.find_element_by_xpath("//input[@class='btn' and @value='Upload']").click()
+                # Click the Upload button to open the upload form
+                driver.find_element_by_xpath("//input[@class='btn' and @value='Upload']").click()
 
-        # Update Status
-        print 'Loaded Upload form'
-        sys.stdout.flush()
+                # Update Status
+                print 'Loaded Upload form'
+                sys.stdout.flush()
 
-        # Populate and submit the upload form to create a beta managed package
-        name_input = driver.find_element_by_id('ExportPackagePage:UploadPackageForm:PackageDetailsPageBlock:PackageDetailsBlockSection:VersionInfoSectionItem:VersionText')
+                # Populate and submit the upload form to create a beta managed package
+                name_input = driver.find_element_by_id('ExportPackagePage:UploadPackageForm:PackageDetailsPageBlock:PackageDetailsBlockSection:VersionInfoSectionItem:VersionText')
+                break
+            except selenium.common.exceptions.NoSuchElementException:
+                if retry_count == 2:
+                    print "VersionText not found after 2 retries"
+                    break
+                else:
+                    print "Couldn't find the element the first time, trying again..."
+                    sys.stdout.flush()
+                    retry_count += 1
+                    continue
+            except:
+                e = sys.exc_info()[0]
+                v = sys.exc_info()[1]
+                sys.exit("Error: %s : %s" % (e, v))
+
         name_input.clear()
         name_input.send_keys(build_name)
         driver.find_element_by_id('ExportPackagePage:UploadPackageForm:PackageDetailsPageBlock:PackageDetailsPageBlockButtons:bottom:upload').click()
