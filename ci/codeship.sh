@@ -307,14 +307,15 @@ if [ $BUILD_TYPE == "master" ]; then
         echo "Generating release notes for tag $CURRENT_REL_TAG"
         python $CUMULUSCI_PATH/ci/github/release_notes.py
     
-    
-        # Merge master commit to all open feature branches
-        echo
-        echo "-----------------------------------------------------------------"
-        echo "Merge commit to all open feature branches"
-        echo "-----------------------------------------------------------------"
-        echo
-        python $CUMULUSCI_PATH/ci/github/merge_master_to_feature.py
+        if [ "$GITHUB_MERGE_COMMITS" == "true" ]; then       
+            # Merge master commit to all open feature branches
+            echo
+            echo "-----------------------------------------------------------------"
+            echo "Merge commit to all open feature branches"
+            echo "-----------------------------------------------------------------"
+            echo
+            python $CUMULUSCI_PATH/ci/github/merge_master_to_feature.py
+        fi
     else
         echo
         echo "-----------------------------------------------------------------"
