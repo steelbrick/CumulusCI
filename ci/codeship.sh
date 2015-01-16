@@ -279,13 +279,15 @@ if [ $BUILD_TYPE == "master" ]; then
     done
     if [[ $? -ne 0 ]]; then exit 1; fi
 
-    echo
-    echo "-----------------------------------------------------------------"
-    echo "ant runAllTests: Testing $PACKAGE_VERSION in beta org"
-    echo "-----------------------------------------------------------------"
-    echo
-    runAntTarget runAllTestsManaged
-    if [[ $? -ne 0 ]]; then exit 1; fi
+    if [ "$RUNALLTESTS_BETA" == "true" ]; then   
+        echo
+        echo "-----------------------------------------------------------------"
+        echo "ant runAllTests: Testing $PACKAGE_VERSION in beta org"
+        echo "-----------------------------------------------------------------"
+        echo
+        runAntTarget runAllTestsManaged
+        if [[ $? -ne 0 ]]; then exit 1; fi
+    fi
     
     if [ "$GITHUB_USERNAME" != "" ]; then   
         # Create GitHub Release
