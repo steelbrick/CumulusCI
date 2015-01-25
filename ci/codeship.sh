@@ -19,18 +19,18 @@ if [ "$PREFIX_RELEASE" == "" ]; then
 fi
 
 # Determine build type and setup Salesforce credentials
-if [[ $BAMBOO_PLANREPOSITORY_BRANCHNAME == $MASTER_BRANCH ]]; then
+if [[ $bamboo_planRepository_branchName == $MASTER_BRANCH ]]; then
     BUILD_TYPE='master'
-elif [[ $BAMBOO_PLANREPOSITORY_BRANCHNAME == $PREFIX_FEATURE* ]]; then
+elif [[ $bamboo_planRepository_branchName == $PREFIX_FEATURE* ]]; then
     BUILD_TYPE='feature'
-elif [[ $BAMBOO_PLANREPOSITORY_BRANCHNAME == $PREFIX_BETA* ]]; then
+elif [[ $bamboo_planRepository_branchName == $PREFIX_BETA* ]]; then
     BUILD_TYPE='beta'
-elif [[ $BAMBOO_PLANREPOSITORY_BRANCHNAME == $PREFIX_RELEASE* ]]; then
+elif [[ $bamboo_planRepository_branchName == $PREFIX_RELEASE* ]]; then
     BUILD_TYPE='release'    
 fi
 
 if [ "$BUILD_TYPE" == "" ]; then
-    echo "BUILD SKIPPED: Could not determine BUILD_TYPE for $BAMBOO_PLANREPOSITORY_BRANCHNAME"
+    echo "BUILD SKIPPED: Could not determine BUILD_TYPE for $bamboo_planRepository_branchName"
     exit 0
 fi
 
@@ -50,7 +50,7 @@ export BUILD_WORKSPACE=`pwd`
 
 echo
 echo "-----------------------------------------------------------------"
-echo "Building $BAMBOO_PLANREPOSITORY_BRANCHNAME as a $BUILD_TYPE build"
+echo "Building $bamboo_planRepository_branchName as a $BUILD_TYPE build"
 echo "-----------------------------------------------------------------"
 echo
 
