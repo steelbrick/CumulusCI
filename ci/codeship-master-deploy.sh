@@ -96,17 +96,17 @@ fi
     export SF_SERVERURL=$SF_SERVERURL_PACKAGING
     echo "Got org credentials for packaging org from env"
 
-    # # Deploy to packaging org
-    # echo
-    # echo "-----------------------------------------------------------------"
-    # echo "ant deployCIPackageOrg - Deploy to packaging org"
-    # echo "-----------------------------------------------------------------"
-    # echo
+    # Deploy to packaging org
+    echo
+    echo "-----------------------------------------------------------------"
+    echo "ant deployCIPackageOrg - Deploy to packaging org"
+    echo "-----------------------------------------------------------------"
+    echo
 
-    # #echo "Running deployCIPackageOrg from /home/rof/clone"
-    # #cd /home/rof/clone
-    # runAntTarget deployCIPackageOrg
-    # if [[ $? != 0 ]]; then exit 1; fi
+    #echo "Running deployCIPackageOrg from /home/rof/clone"
+    #cd /home/rof/clone
+    runAntTarget deployCIPackageOrg
+    if [[ $? != 0 ]]; then exit 1; fi
 
     
     #echo
@@ -117,7 +117,7 @@ fi
     #waitOnBackgroundJobs
     #if [ $? != 0 ]; then exit 1; fi
     
-    Upload beta package
+    # Upload beta package
     echo
     echo "-----------------------------------------------------------------"
     echo "Uploading beta managed package via Selenium"
