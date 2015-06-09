@@ -620,6 +620,83 @@ project.setProperty("downgradePackage", result);
     </sequential>  
   </macrodef>
 
+    <macrodef name="buildProfileXml" description="Build a fake profile definition to edit all custom fields">
+        <attribute name="srcDir" description="If provided, the relative path to the source directory from the project root.  Defaults to src" default="src" />
+        <sequential>
+            <echo file="${basedir}/@{srcDir}/profiles/Admin.profile.new">&lt;?xml version="1.0" encoding="UTF-8"?&gt;${line.separator}</echo>
+            <echo file="${basedir}/@{srcDir}/profiles/Admin.profile.new" append="true">&lt;Profile xmlns="http://soap.sforce.com/2006/04/metadata"&gt;${line.separator}</echo>
+            <echo file="${basedir}/@{srcDir}/profiles/Admin.profile.new" append="true">    &lt;userPermissions&gt;${line.separator}</echo>
+            <echo file="${basedir}/@{srcDir}/profiles/Admin.profile.new" append="true">        &lt;enabled&gt;true&lt;/enabled&gt;${line.separator}</echo>
+            <echo file="${basedir}/@{srcDir}/profiles/Admin.profile.new" append="true">        &lt;name&gt;ApiEnabled&lt;/name&gt;${line.separator}</echo>
+            <echo file="${basedir}/@{srcDir}/profiles/Admin.profile.new" append="true">    &lt;/userPermissions&gt;${line.separator}</echo>
+
+            <addFieldPerms dir="${basedir}/@{srcDir}/objects" xmlfile="${basedir}/@{srcDir}/profiles/Admin.profile.new" xslt="${cumulus_ci.basedir}/xsl/extract_obj_field_perms.xsl" />
+
+            <echo file="${basedir}/@{srcDir}/profiles/Admin.profile.new" append="true">    &lt;userLicense&gt;Salesforce&lt;/userLicense&gt;${line.separator}</echo>
+            <echo file="${basedir}/@{srcDir}/profiles/Admin.profile.new" append="true">&lt;/Profile&gt;${line.separator}</echo>
+
+            <move file="${basedir}/@{srcDir}/profiles/Admin.profile.new" tofile="${basedir}/@{srcDir}/profiles/Admin.profile" />
+        </sequential>
+    </macrodef>
+
+  <macrodef name="addFieldPerms" description="Loop through object files to add fieldPermissions for each custom field">
+      <attribute name="dir" description="The package directory containing the files to search in." />
+      <attribute name="xmlfile" description="The path of the target package.xml or destructiveChanges.xml file" />
+      <attribute name="xslt" description="The path of the xslt transform to extract type components from the standard object file" default="${cumulus_ci.basedir}/xsl/extract_subtype.xsl" />
+      <sequential>
+          <for param="file">
+              <path>
+                  <fileset dir="@{dir}" includes="*.object" />
+              </path>
+              <sequential>
+                  <!-- Parse the file basename and parent name from the parent's filename -->
+                  <basename property="parent_file" file="@{file}" />
+                  <basename property="parent" file="@{file}" suffix=".object" />
+
+                  <!-- Run xslt to build a file for each parent containing perm elements for each field -->
+                  <getWhitelistForObjectAndType object="${parent}" type="CustomField" property="obj_type_whitelist" />
+                  <xslt in="@{file}" out="@{dir}/${parent_file}.CustomField" style="@{xslt}">
+                      <param name="whitelist" expression="${obj_type_whitelist}" />
+                  </xslt>
+
+                  <!-- Prepend names with object. -->
+                  <if>
+                      <equals arg1="object" arg2="object" />
+                      <then>
+                          <replaceregexp file="@{dir}/${parent_file}.CustomField" match="field>(.*)./field>" replace="field>${parent}.\1&lt;/field>${line.separator}" flags="g" />
+                      </then>
+                  </if>
+
+                  <!-- Unset properties for basename call in next iteration of loop -->
+                  <var name="parent" unset="true" />
+                  <var name="parent_file" unset="true" />
+              </sequential>
+          </for>
+
+          <!-- Concatenate all lines from earlier extraction output files -->
+          <concat destfile="@{dir}/CustomField.extract">
+              <fileset dir="@{dir}" includes="**/*.object.CustomField" />
+              <filterchain>
+                  <prefixlines prefix="    " />
+                  <linecontainsregexp>
+                      <regexp pattern="fieldPermissions>|editable>|field>|readable>"/>
+                  </linecontainsregexp>
+              </filterchain>
+          </concat>
+
+          <loadfile property="type.extract" srcfile="@{dir}/CustomField.extract" />
+
+          <echo file="@{xmlfile}" append="true">${type.extract}</echo>
+
+          <delete>
+              <fileset dir="@{dir}" includes="**/*.CustomField" />
+          </delete>
+          <delete file="@{dir}/CustomField.extract" />
+
+          <var name="type.extract" unset="true" />
+      </sequential>
+  </macrodef>
+
   <macrodef name="buildPackageXml" description="Construct a complete package.xml file based on the metadata in the src directory">
     <attribute name="version" description="The value for the version element in the package.xml" />
     <attribute name="package" description="The value for the fullName element in the package.xml" default="NOTSET" />
@@ -633,7 +710,6 @@ project.setProperty("downgradePackage", result);
       <buildPackageXmlFromDir dir="${basedir}/@{srcDir}" xmlfile="${basedir}/@{srcDir}/package.xml.new" package="@{package}" version="@{version}" exclude="CustomLabels.labels *.matchingRule" installClass="@{installClass}" uninstallClass="@{uninstallClass}" />
 
       <!-- Add metadata sub-types of object which need to be explicitly listed in package.xml -->
-      <!--<addMetadataSubType dir="${basedir}/@{srcDir}" xmlfile="${basedir}/@{srcDir}/package.xml.new" typename="ActionOverride" element="actionOverrides" nameelement="actionName" />-->
       <addMetadataSubType dir="${basedir}/@{srcDir}/objects" xmlfile="${basedir}/@{srcDir}/package.xml.new" typename="BusinessProcess" element="businessProcesses" />
       <addMetadataSubType dir="${basedir}/@{srcDir}/objects" xmlfile="${basedir}/@{srcDir}/package.xml.new" typename="CompactLayout" element="compactLayouts" />
       <addMetadataSubType dir="${basedir}/@{srcDir}/objects" xmlfile="${basedir}/@{srcDir}/package.xml.new" typename="CustomField" element="fields" xslt="${cumulus_ci.basedir}/xsl/extract_obj_fields.xsl" />
