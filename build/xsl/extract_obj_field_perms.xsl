@@ -9,7 +9,7 @@
         <shite>
         <xsl:for-each select="sf:fields">
           <xsl:if test="substring(sf:fullName, string-length(sf:fullName) - 2) = '__c'">
-          <xsl:if test="not(sf:required) or sf:required = 'false'">
+          <xsl:if test="(not(sf:required) or sf:required = 'false') and sf:type != 'MasterDetail'">
           <xsl:if test="not(contains(substring(sf:fullName, 0, string-length(sf:fullName) - 2), '__'))">
           <xsl:if test="not(contains($whitelist, concat(',', sf:fullName, ',')))">
               <fieldPermissions>
