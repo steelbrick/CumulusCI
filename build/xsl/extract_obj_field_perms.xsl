@@ -2,9 +2,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:sf="http://soap.sforce.com/2006/04/metadata" xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xslt="http://xml.apache.org/xslt" xmlns:xalan="http://xml.apache.org/xalan" exclude-result-prefixes="sf">
 
 <xsl:param name="whitelist" select="" />
-
 <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes" xslt:indent-amount="4"/>
-
     <xsl:template match="sf:CustomObject">
         <shite>
         <xsl:for-each select="sf:fields">
@@ -24,5 +22,4 @@
         </xsl:for-each>
         </shite>
     </xsl:template>
-
 </xsl:stylesheet>
