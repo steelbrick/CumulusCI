@@ -8,7 +8,7 @@
     <xsl:template match="sf:___parentelement___">
         <types>
         <xsl:for-each select="sf:___element___">
-          <xsl:if test="not(contains($whitelist, concat(',', sf:___nameelement___, ',')))">
+          <xsl:if test="$whitelist != '~' and not(contains($whitelist, concat(',', sf:___nameelement___, ',')))">
             <xsl:if test="not(contains(substring(sf:___nameelement___, 0, string-length(sf:___nameelement___) - 2), '__'))">
                 <members><xsl:copy-of select="sf:___nameelement___/text()"/></members>
             </xsl:if>
