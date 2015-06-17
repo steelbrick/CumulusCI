@@ -654,7 +654,7 @@
                 </exec>
             </then>
             <else>
-                <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="${cumulus_ci.basedir}/empty" testLevel="RunLocalTests" maxPoll="${cumulusci.maxPoll.test}" />
+                <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="${cumulus_ci.basedir}/empty" testLevel="RunLocalTests" logType="Debugonly" maxPoll="${cumulusci.maxPoll.test}" />
             </else>
         </if>
     </target>
@@ -677,7 +677,7 @@
                 </exec>
             </then>
             <else>
-                <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="${cumulus_ci.basedir}/empty" testLevel="RunLocalTests" maxPoll="${cumulusci.maxPoll.test}" />
+                <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="${cumulus_ci.basedir}/empty" testLevel="RunLocalTests" logType="Debugonly" maxPoll="${cumulusci.maxPoll.test}" />
             </else>
         </if>
     </target>
