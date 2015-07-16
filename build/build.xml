@@ -48,6 +48,7 @@
 
     <!-- Set default values for properties not provided in cumulusci.properties -->
     <property name="cumulusci.package.name.managed" value="${cumulusci.package.name}" />
+    <property name="cumulusci.package.setupWeblink" value="" />
     <property name="cumulusci.package.installClass" value="" />
     <property name="cumulusci.package.uninstallClass" value="" />
     <property name="cumulusci.package.apiVersion" value="31.0" />
@@ -692,7 +693,7 @@
     </target>
 
     <target name="updatePackageXmlManaged">
-        <buildPackageXml package="${cumulusci.package.name.managed}" version="${cumulusci.package.apiVersion}" installClass="${cumulusci.package.installClass}" uninstallClass="${cumulusci.package.uninstallClass}" />
+        <buildPackageXml package="${cumulusci.package.name.managed}" version="${cumulusci.package.apiVersion}" installClass="${cumulusci.package.installClass}" uninstallClass="${cumulusci.package.uninstallClass}" setupWeblink="${cumulusci.package.setupWeblink}"/>
     </target>
 
     <target name="updateMetaXml">
