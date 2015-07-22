@@ -49,6 +49,7 @@
     <!-- Set default values for properties not provided in cumulusci.properties -->
     <property name="cumulusci.package.name.managed" value="${cumulusci.package.name}" />
     <property name="cumulusci.package.setupWeblink" value="" />
+    <property name="cumulusci.package.description" value="" />
     <property name="cumulusci.package.installClass" value="" />
     <property name="cumulusci.package.uninstallClass" value="" />
     <property name="cumulusci.package.apiVersion" value="31.0" />
@@ -621,7 +622,7 @@
     
     <!-- retrievePackagedToSrc: Retrieves all metadata from the package in the target org into the src directory --> 
     <target name="retrievePackagedToSrc"> 
-        <retrievePackaged dir="src" package="${cumulusci.package.name}" mkdir="false" /> 
+        <retrievePackaged dir="src" package="${cumulusci.package.name}" mkdir="false" />
     </target>
 
     <!-- createUnmanagedPackage: Does an empty deployment into an unmanaged package to create it if it does not exist -->
@@ -693,7 +694,7 @@
     </target>
 
     <target name="updatePackageXmlManaged">
-        <buildPackageXml package="${cumulusci.package.name.managed}" version="${cumulusci.package.apiVersion}" installClass="${cumulusci.package.installClass}" uninstallClass="${cumulusci.package.uninstallClass}" setupWeblink="${cumulusci.package.setupWeblink}"/>
+        <buildPackageXml package="${cumulusci.package.name.managed}" version="${cumulusci.package.apiVersion}" installClass="${cumulusci.package.installClass}" uninstallClass="${cumulusci.package.uninstallClass}" description="${cumulusci.package.description}" setupWeblink="${cumulusci.package.setupWeblink}"/>
     </target>
 
     <target name="updateMetaXml">

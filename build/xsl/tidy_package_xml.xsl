@@ -11,8 +11,11 @@
     <xsl:copy>
       <xsl:apply-templates select="@*" />
       <xsl:apply-templates select="sf:fullName" />
+      <xsl:apply-templates select="sf:description" />
+      <xsl:apply-templates select="sf:namespacePrefix" />
       <xsl:apply-templates select="sf:postInstallClass" />
-      <xsl:apply-templates select="sf:types">    
+      <xsl:apply-templates select="sf:setupWeblink" />
+      <xsl:apply-templates select="sf:types">
         <xsl:sort select="sf:name"/>
       </xsl:apply-templates>
       <xsl:apply-templates select="sf:uninstallClass" />
