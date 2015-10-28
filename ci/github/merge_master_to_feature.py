@@ -10,7 +10,7 @@ def merge_master_to_feature():
     USERNAME=os.environ.get('GITHUB_USERNAME')
     PASSWORD=os.environ.get('GITHUB_PASSWORD')
     BUILD_COMMIT=os.environ.get('BUILD_COMMIT', None)
-    PREFIX=os.environ.get('PREFIX', 'feature/')
+    PREFIX=os.environ.get('PREFIX')
     
     g = Github(USERNAME,PASSWORD)
 
