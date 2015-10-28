@@ -10,6 +10,7 @@ def merge_master_to_feature():
     USERNAME=os.environ.get('GITHUB_USERNAME')
     PASSWORD=os.environ.get('GITHUB_PASSWORD')
     BUILD_COMMIT=os.environ.get('BUILD_COMMIT', None)
+    PREFIX=os.environ.get('PREFIX', 'feature/')
     
     g = Github(USERNAME,PASSWORD)
 
@@ -27,8 +28,8 @@ def merge_master_to_feature():
     
     for branch in repo.get_branches():
         # Skip any branches which don't start with feature/
-        if not branch.name.startswith('feature/'):
-            print 'Skipping branch %s: does not start with feature/' % branch.name
+        if not branch.name.startswith(PREFIX):
+            print 'Skipping branch %s: does not start with %s' % (branch.name, PREFIX)
             continue
     
         # Skip the master branch
