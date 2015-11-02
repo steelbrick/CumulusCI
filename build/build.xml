@@ -273,6 +273,11 @@
         <!-- Deploy any unpackaged metadata bundles needed after the deployment -->
         <antcall target="deployUnpackagedPost" />
 
+        <!-- Prevent Salesforce lockout -->
+        <waitfor maxwait="60" maxwaitunit="second">
+            <resourcecontains resource="build.log" substring="Build Failed" />
+        </waitfor>
+
         <!-- Run all tests -->
         <antcall target="runAllTests" />
 
