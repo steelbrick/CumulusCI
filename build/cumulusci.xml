@@ -306,9 +306,6 @@ project.setProperty("downgradePackage", result);
             <case value="homePageComponents">
               <property name="typename" value="HomePageComponent" />
             </case>
-            <case value="labels">
-              <property name="typename" value="CustomLabel" />
-            </case>
             <case value="layouts">
               <property name="typename" value="Layout" />
             </case>
@@ -725,8 +722,7 @@ project.setProperty("downgradePackage", result);
     
   
     <sequential>
-      <!-- Exclude CustomLabels.labels so we can use addMetadataSubType on it instead -->
-      <buildPackageXmlFromDir dir="${basedir}/@{srcDir}" xmlfile="${basedir}/@{srcDir}/package.xml.new" package="@{package}" version="@{version}" exclude="CustomLabels.labels *.matchingRule" installClass="@{installClass}" uninstallClass="@{uninstallClass}" description="@{description}" setupWeblink="@{setupWeblink}"/>
+      <buildPackageXmlFromDir dir="${basedir}/@{srcDir}" xmlfile="${basedir}/@{srcDir}/package.xml.new" package="@{package}" version="@{version}" exclude="*.matchingRule" installClass="@{installClass}" uninstallClass="@{uninstallClass}" description="@{description}" setupWeblink="@{setupWeblink}"/>
 
       <!-- Add metadata sub-types of object which need to be explicitly listed in package.xml -->
       <addMetadataSubType dir="${basedir}/@{srcDir}/objects" xmlfile="${basedir}/@{srcDir}/package.xml.new" typename="BusinessProcess" element="businessProcesses" />
@@ -857,8 +853,7 @@ project.setProperty("downgradePackage", result);
       <!--<replaceregexp file="@{dir}/package.xml" match="Package(.*)>" replace="Package\1>&lt;fullName&gt;@{package}&lt;/fullName&gt;${line-separator}" />-->
 
       <!-- Build the destructiveChanges.xml file by walking the srcdir and adding all metadata -->
-      <!-- Exclude CustomLabels.labels so we can use addMetadataSubType on it instead -->
-      <buildPackageXmlFromDir dir="@{srcdir}" xmlfile="@{dir}/destructiveChanges.xml" version="${cumulusci.package.apiVersion}" exclude="${metadata_whitelist} CustomLabels.labels *.workflow *.matchingRule" />
+      <buildPackageXmlFromDir dir="@{srcdir}" xmlfile="@{dir}/destructiveChanges.xml" version="${cumulusci.package.apiVersion}" exclude="${metadata_whitelist} *.workflow *.matchingRule" />
 
       <!-- Add standard object fields to destructiveChanges.xml -->
       <addMetadataSubType dir="@{srcdir}/objects" xmlfile="@{dir}/destructiveChanges.xml" typename="CompactLayout" element="compactLayouts" />
@@ -896,8 +891,7 @@ project.setProperty("downgradePackage", result);
 </Package>]]></echo>
 
       <!-- Build the destructiveChanges.xml file by walking the unpackaged directory and adding all metadata -->
-      <!-- Exclude CustomLabels.labels so we can use addMetadataSubType on it instead -->
-      <buildPackageXmlFromDir dir="@{srcdir}/unpackaged" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" version="${cumulusci.package.apiVersion}" exclude="CustomLabels.labels *.matchingRules" />
+      <buildPackageXmlFromDir dir="@{srcdir}/unpackaged" xmlfile="@{dir}/unpackaged/destructiveChanges.xml" version="${cumulusci.package.apiVersion}" exclude="*.matchingRules" />
      
       <!-- Copy the package manifest used to retrieve standard objects into srcdir and create an objects subfolder-->
       <copy file="@{srcdir}/standard/package.xml" todir="@{dir}/standard" />
