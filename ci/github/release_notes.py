@@ -154,15 +154,15 @@ def create_release_notes():
             if not section:
                 continue
     
-            # Skip empty lines
-            line = line.strip()
-            if not line:
+            # Skip empty lines and trim extra spaces from line end
+            line = line.rstrip()
+            if not line.strip():
                 continue
     
             # If we got here, we are in a section and want to extract the line as content
             if section == 'issues':
                 # Parse out the issue number as int
-                issue = re.sub(r'[F|f]ix.* #([0-9][0-9]*).*$', r'\1', line)
+                issue = re.sub(r'.*[F|f]ix.* #([0-9][0-9]*).*$', r'\1', line)
                 if issue:
                     issue = int(issue)
                     if issue not in content[section]:
