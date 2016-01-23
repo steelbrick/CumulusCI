@@ -234,7 +234,30 @@
         </if>
     </target>
 
-    <!-- deployCI: Does a full build including uninstalling previously deployed unpackaged code, updating managed package versions, and then deploying with all tests -->
+	<!-- stripFieldsForUninstall: strip and modify fields that could ruin the uninstall, like type of Summary -->
+	<target name="stripFieldsForUninstall">
+		<if>
+			<available file="${basedir}/src/objects/" type="dir" />
+			<then>
+                <trycatch>
+                    <try>
+                        <echo>Stripping bad fields for uninstall</echo>
+                        <stripFieldsForUninstall srcDir="src" dir="uninstall"/>
+                        <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall" maxPoll="${cumulusci.maxPoll.notest}" />
+                        <delete dir="uninstall" />
+                    </try>
+                    <catch>
+                        <echo>Failed to strip fields from objects prior to uninstall</echo>
+                    </catch>
+                </trycatch>
+			</then>
+			<else>
+				<echo>No objects found in src dir</echo>
+			</else>
+		</if>
+	</target>
+
+	<!-- deployCI: Does a full build including uninstalling previously deployed unpackaged code, updating managed package versions, and then deploying with all tests -->
     <!-- !!!WARNING!!!: DO NOT run this against a real production org as it will delete everything.  It is designed to clear the target org to ensure a clean build test. -->
     <target name="deployCI">
         <echo>============================================================================</echo>
@@ -532,6 +555,7 @@
     <target name="uninstall">
         <echo>----------------------------------------------------------------------------</echo>
         <antcall target="preUninstall" />
+        <antcall target="stripFieldsForUninstall" />
         <antcall target="uninstallUnpackagedPost" />
         <delete dir="uninstallsrc" />
         <delete dir="uninstall" />

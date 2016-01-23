@@ -588,12 +588,7 @@ project.setProperty("downgradePackage", result);
     <attribute name="nameelement" description="The xml element whose value should provide the name (used in the package.xml members tag)." default="fullName" />
     <attribute name="parentelement" description="The containing element name in target files.  For example, CustomObject if looking in object files" default="CustomObject" />
     <sequential>
-		<script language="javascript">
-			var logger = project.getBuildListeners( ).firstElement( );
-			logger.setMessageOutputLevel( 0 );
-		</script>
-
-		<!-- Make sure the directory actually exist, otherwise do nothing -->
+      <!-- Make sure the directory actually exist, otherwise do nothing -->
       <if>
         <available file="@{dir}" type="dir" />
         <then>
@@ -695,11 +690,6 @@ project.setProperty("downgradePackage", result);
           </if>
         </then>
       </if>
-
-		<script language="javascript">
-			var logger = project.getBuildListeners( ).firstElement( );
-			logger.setMessageOutputLevel( 1 );
-		</script>
 	</sequential>
   </macrodef>
 
@@ -726,10 +716,6 @@ project.setProperty("downgradePackage", result);
       <attribute name="xmlfile" description="The path of the target package.xml or destructiveChanges.xml file" />
       <attribute name="xslt" description="The path of the xslt transform to extract type components from the standard object file" default="${cumulus_ci.basedir}/xsl/extract_subtype.xsl" />
       <sequential>
-		  <script language="javascript">
-			  var logger = project.getBuildListeners( ).firstElement( );
-			  logger.setMessageOutputLevel( 0 );
-		  </script>
           <for param="file">
               <path>
                   <fileset dir="@{dir}" includes="*.object" />
@@ -780,11 +766,6 @@ project.setProperty("downgradePackage", result);
           <delete file="@{dir}/CustomField.extract" />
 
           <var name="type.extract" unset="true" />
-
-		  <script language="javascript">
-			  var logger = project.getBuildListeners( ).firstElement( );
-			  logger.setMessageOutputLevel( 1 );
-		  </script>
 	  </sequential>
   </macrodef>
 
@@ -1213,5 +1194,36 @@ project.setProperty("downgradePackage", result);
 
     </sequential>
   </macrodef>
+
+	<macrodef name="stripFieldsForUninstall" description=" stripFieldsForUninstall: strip and modify fields that could ruin the uninstall, like type of Summary">
+		<attribute name="srcDir" description="A root directory containing metadata files" />
+		<attribute name="dir" description="Target directory to populate" />
+		<attribute name="includes" description="Include object name pattern" default="*"/>
+		<attribute name="excludes" description="Exclude object name pattern" default=""/>
+		<sequential>
+          <delete dir="@{dir}" />
+          <copy todir="@{dir}/objects">
+            <fileset dir="@{srcDir}/objects" includes="@{includes}" excludes="@{excludes}">
+              <or>
+                <contains text="&lt;type&gt;Summary&lt;/type&gt;"/>
+                <contains text="&lt;lookupFilter&gt;"/>
+              </or>
+            </fileset>
+          </copy>
+			<for param="file">
+				<path>
+					<fileset dir="@{dir}">
+						<include name="**/objects/*.object" />
+					</fileset>
+				</path>
+				<sequential>
+					<xslt in="@{file}" out="@{file}.stripped" style="${cumulus_ci.basedir}/xsl/strip_for_uninstall.xsl" />
+					<move file="@{file}.stripped" tofile="@{file}" />
+				</sequential>
+			</for>
+
+          <buildPackageXml package="${cumulusci.package.name}" version="${cumulusci.package.apiVersion}" srcDir="@{dir}" />
+        </sequential>
+	</macrodef>
 
 </project>
