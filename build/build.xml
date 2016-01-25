@@ -556,7 +556,6 @@
     <target name="uninstall">
         <echo>----------------------------------------------------------------------------</echo>
         <antcall target="preUninstall" />
-        <antcall target="stripFieldsForUninstall" />
         <antcall target="uninstallUnpackagedPost" />
         <delete dir="uninstallsrc" />
         <delete dir="uninstall" />
