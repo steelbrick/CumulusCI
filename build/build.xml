@@ -242,7 +242,6 @@
                 <trycatch>
                     <try>
                         <echo>Stripping bad fields for uninstall</echo>
-                        <mkdir dir="uninstall"/>
                         <stripFieldsForUninstall srcDir="src" dir="uninstall"/>
                         <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall" maxPoll="${cumulusci.maxPoll.notest}" />
                         <delete dir="uninstall" />
