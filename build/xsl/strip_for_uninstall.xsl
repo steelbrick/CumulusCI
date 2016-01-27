@@ -22,7 +22,7 @@
 	</xsl:template>
 
 	<xsl:template match="*[sf:type='Number' or sf:type='Percent' or sf:type='Currency']/sf:formula/text()">
-		<xsl:text>'Bork'</xsl:text>
+		<xsl:text>0</xsl:text>
 	</xsl:template>
 
 	<xsl:template match="*[sf:type='Date']/sf:formula/text()">
