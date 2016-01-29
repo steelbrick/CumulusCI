@@ -266,10 +266,6 @@
         <!-- Create the unmanaged package if it doesn't already exist -->
         <antcall target="createUnmanagedPackage" />
 
-        <!-- Create an Admin.profile granting access to our custom fields, and update the package to include it -->
-        <antcall target="updateProfileXml" />
-        <antcall target="updatePackageXml" />
-
         <!-- Uninstall all unpackaged code from the target org.  We have to do this first so we can uninstall and reinstall any managed packages not at the right version -->
         <if>
             <equals arg1="${cumulusci.unmanaged.destroy.mode}" arg2="full" />
@@ -845,10 +841,6 @@
                 <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="${cumulus_ci.basedir}/empty" testLevel="RunAllTestsInOrg" maxPoll="${cumulusci.maxPoll.test}" />
             </else>
         </if>
-    </target>
-
-    <target name="updateProfileXml">
-        <buildProfileXml/>
     </target>
 
     <!-- updatePackageXml: Builds a new package.xml based upon the metadata in the src directory -->
