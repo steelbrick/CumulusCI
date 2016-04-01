@@ -237,22 +237,15 @@
 	<!-- stripFieldsForUninstall: strip and modify fields that could ruin the uninstall, like type of Summary -->
 	<target name="stripFieldsForUninstall">
 		<if>
-			<available file="${basedir}/src/objects/" type="dir" />
+			<available file="${basedir}/uninstallsrc/objects/" type="dir" />
 			<then>
-                <trycatch>
-                    <try>
-                        <echo>Stripping bad fields for uninstall</echo>
-                        <stripFieldsForUninstall srcDir="src" dir="uninstall"/>
-                        <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall" maxPoll="${cumulusci.maxPoll.notest}" />
-                        <delete dir="uninstall" />
-                    </try>
-                    <catch>
-                        <echo>Failed to strip fields from objects prior to uninstall</echo>
-                    </catch>
-                </trycatch>
+				<echo>Stripping bad fields for uninstall</echo>
+				<stripFieldsForUninstall srcDir="uninstallsrc" dir="uninstall"/>
+				<sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall" maxPoll="${cumulusci.maxPoll.notest}" />
+				<delete dir="uninstall" />
 			</then>
 			<else>
-				<echo>No objects found in src dir</echo>
+				<echo>No objects found in uninstallsrc dir</echo>
 			</else>
 		</if>
 	</target>
@@ -550,11 +543,11 @@
     <!-- uninstall: Removes all metadata from the package -->
     <target name="uninstall">
         <echo>----------------------------------------------------------------------------</echo>
-        <antcall target="preUninstall" />
         <antcall target="uninstallUnpackagedPost" />
         <delete dir="uninstallsrc" />
         <delete dir="uninstall" />
         <retrievePackaged dir="uninstallsrc" package="${cumulusci.package.name}" />
+        <antcall target="preUninstall" />
         <buildPackagedDestructiveChanges srcdir="uninstallsrc" dir="uninstall" package="${cumulusci.package.name}" />
         <echo>Uninstalling with purgeOnDelete=${cumulusci.destroy.purgeondelete}</echo>
         <sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="uninstall" purgeOnDelete="${cumulusci.destroy.purgeondelete}" maxPoll="${cumulusci.maxPoll.notest}" />
