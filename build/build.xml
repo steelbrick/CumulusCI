@@ -8,6 +8,9 @@
          resource="net/sf/antcontrib/antlib.xml"
          classpath="${cumulus_ci.basedir}/lib/ant-contrib-1.0b2.jar" />
 
+    <taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask"
+             classpath="${cumulus_ci.basedir}/lib/xmltask.jar"/>
+
     <!-- If no propertyfile was passed in command line, attempt to load a build.properties if it exists -->
     <if>
         <and>
@@ -577,11 +580,7 @@
             <delete dir="${basedir}/installedPackages"/>
             <mkdir dir="${basedir}/installedPackages"/>
     
-            <sf:bulkRetrieve
-                username="${sf.username}"
-                password="${sf.password}"
-                metadataType="InstalledPackage"
-                retrieveTarget="${basedir}/installedPackages"/>
+            <sf:bulkRetrieve username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" metadataType="InstalledPackage" retrieveTarget="${basedir}/installedPackages"/>
     
             <echo>Required Package Versions:</echo>
             <echo>-------------------------------</echo>

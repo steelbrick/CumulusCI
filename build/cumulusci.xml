@@ -286,12 +286,28 @@ project.setProperty("downgradePackage", result);
       	    <mkdir dir="@{dir}"/>
       	</then>
       </if>
+      <trycatch>
+        <try>
+          <!-- REMOVE THIS EXTRA RETRIEVE AFTER ALL OF OUR FEATURE ORGS HAVE CALMED THE CRAP DOWN -->
+          <sf:retrieve
+                username="${sf.username}"
+                password="${sf.password}"
+                serverurl="${sf.serverurl}"
+                retrieveTarget="@{dir}"
+                packageNames="SteelBrick+CPQ"/>
+        </try>
+        <catch>
+          <echo>No package SteelBrick CPQ to retrieve from this org?</echo>
+        </catch>
+      </trycatch>
+      <echo>Retrieved metadata to @{dir} from package SteelBrick CPQ (LEGACY NUKE)</echo>
       <sf:retrieve 
         username="${sf.username}" 
         password="${sf.password}" 
         serverurl="${sf.serverurl}" 
         retrieveTarget="@{dir}" 
         packageNames="@{package}"/>
+      <echo>Retrieved metadata to @{dir} from package @{package}</echo>
     </sequential>
   </macrodef>
 
@@ -348,6 +364,9 @@ project.setProperty("downgradePackage", result);
             </case>
             <case value="documents">
               <property name="typename" value="Document" />
+            </case>
+            <case value="globalPicklists">
+              <property name="typename" value="GlobalPicklist" />
             </case>
             <case value="homePageComponents">
               <property name="typename" value="HomePageComponent" />
